@@ -1,0 +1,25 @@
+{
+  "name": "dogars-discord-commands",
+  "version": "0.0.1",
+  "description": "Discord slash commands for interacting with Dogars",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ./src --fix --ext .ts",
+    "postinstall": "npm run build"
+  },
+  "author": "Mr. Sableye <mister.sableye@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.68",
+    "@types/node": "^14.14.16",
+    "@typescript-eslint/eslint-plugin": "^4.11.0",
+    "eslint": "^7.16.0",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "tweetnacl": "^1.0.3"
+  }
+}

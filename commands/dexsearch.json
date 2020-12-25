@@ -1,0 +1,41 @@
+{
+  "name": "dexsearch",
+  "description": "Search for a Dogars set",
+  "options": [{
+    "name": "format",
+    "description": "Format of the set",
+    "type": 3
+  }, {
+    "name": "creator",
+    "description": "Creator of the set",
+    "type": 3
+  }, {
+    "name": "tripcode",
+    "description": "Tripcode of the creator of the set",
+    "type": 3
+  }, {
+    "name": "name",
+    "description": "Name of the set",
+    "type": 3
+  }, {
+    "name": "species",
+    "description": "Species of the set",
+    "type": 3
+  }, {
+    "name": "item",
+    "description": "Item of the set",
+    "type": 3
+  }, {
+    "name": "ability",
+    "description": "Ability of the set",
+    "type": 3
+  }, {
+    "name": "level",
+    "description": "Level of the set",
+    "type": 4
+  }, {
+    "name": "random",
+    "description": "Receive a random set or the first set",
+    "type": 5
+  }]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "data",
+  "description": "Retrieve a specific Dogars set",
+  "options": [{
+    "name": "set",
+    "description": "Either the id of the set or a search query",
+    "type": 3,
+    "required": true
+  }]
+}

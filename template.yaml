@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DiscordApplicationPublicKey:
+    Type: String
+
+Resources:
+  HandleDiscordCommandFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/index.handler
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          PUBLIC_KEY: !Ref DiscordApplicationPublicKey
+      Events:
+        HandleDiscordCommand:
+          Type: Api
+          Properties:
+            Path: /command
+            Method: post
+
+Outputs:
+  HandleDiscordCommandApi:
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/command/"
