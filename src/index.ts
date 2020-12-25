@@ -6,7 +6,7 @@ import {
   DiscordInteractionType,
 } from './discord';
 import { createCommandProcessor } from './discord/commands';
-import { commands } from './dogars/command';
+import { commands } from './discord-commands';
 
 const PUBLIC_KEY = process.env.PUBLIC_KEY as string;
 

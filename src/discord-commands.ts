@@ -1,18 +1,19 @@
 import {
   advancedSearchSets,
+  createErrorEmbed,
+  createSetEmbed,
+  DogarsQuery,
   getRandomSetId,
   getSet,
   searchSets,
-} from './api';
+} from './dogars';
 import {
   Command,
   Commands,
   DiscordInteractionDataValueType,
   DiscordInteractionResponseType,
   getValues,
-} from '../discord';
-import { createErrorEmbed, createSetEmbed } from './utilities';
-import { DogarsQuery } from './types';
+} from './discord';
 
 interface GetSetByIdOptions {
   set: string;
