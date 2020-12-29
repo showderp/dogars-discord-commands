@@ -15,6 +15,7 @@ const processCommand = createCommandProcessor(commands);
 // eslint-disable-next-line import/prefer-default-export
 export const handler: APIGatewayProxyHandlerV2 = async (
   apiGatewayEvent,
+  context,
 ) => {
   const signature = apiGatewayEvent.headers['x-signature-ed25519'] || '';
   const timestamp = apiGatewayEvent.headers['x-signature-timestamp'] || '';
@@ -31,6 +32,8 @@ export const handler: APIGatewayProxyHandlerV2 = async (
     };
   }
 
+  console.log(`[Request ${context.awsRequestId}] Received interaction: ${apiGatewayEvent.body}`);
+
   const interaction = JSON.parse(apiGatewayEvent.body || '{}') as DiscordInteraction;
 
   if (interaction.type === DiscordInteractionType.PING) {
@@ -42,7 +45,11 @@ export const handler: APIGatewayProxyHandlerV2 = async (
     };
   }
 
+  console.time(`[Request ${context.awsRequestId}] Command processing time`);
   const response = await processCommand(interaction);
+  console.timeEnd(`[Request ${context.awsRequestId}] Command processing time`);
+
+  console.log(`[Request ${context.awsRequestId}] Responding with: ${JSON.stringify(response)}`);
 
   return {
     statusCode: 200,
