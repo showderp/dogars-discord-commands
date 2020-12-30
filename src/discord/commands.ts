@@ -87,10 +87,13 @@ export const createCommandProcessor = (commands: Commands) => (interaction: Disc
   throw new Error('No data available on interaction');
 };
 
-export const createFollowUpMessage = async (
+export const editOriginalMessage = async (
   applicationId: string,
   token: string,
   data: DiscordInteractionResponseData,
 ) => {
-  await axios.post(`https://discord.com/api/webhooks/${applicationId}/${token}`, data);
+  await axios.patch(
+    `https://discord.com/api/webhooks/${applicationId}/${token}/messages/@original`,
+    data,
+  );
 };

@@ -3,10 +3,11 @@ import { SQS } from 'aws-sdk';
 import NaCl from 'tweetnacl';
 import {
   createCommandProcessor,
-  createFollowUpMessage,
   DiscordInteraction,
+  DiscordInteractionResponse,
   DiscordInteractionResponseType,
   DiscordInteractionType,
+  editOriginalMessage,
 } from './discord';
 import { commands } from './discord-commands';
 
@@ -55,11 +56,19 @@ export const acknowledgeHandler: APIGatewayProxyHandlerV2 = async (
     MessageBody: apiGatewayEvent.body || '{}',
   }).promise();
 
+  const loadingResponse: DiscordInteractionResponse = {
+    type: DiscordInteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+    data: {
+      embeds: [{
+        color: 16776960,
+        description: 'Awaiting response...',
+      }],
+    },
+  };
+
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      type: DiscordInteractionResponseType.ACKNOWLEDGE_WITH_SOURCE,
-    }),
+    body: JSON.stringify(loadingResponse),
   };
 };
 
@@ -77,7 +86,7 @@ export const responseHandler: SQSHandler = async (
 
       if (response) {
         console.time(`[Request ${context.awsRequestId}] Sent follow up message`);
-        await createFollowUpMessage(APPLICATION_ID, interaction.token, response);
+        await editOriginalMessage(APPLICATION_ID, interaction.token, response);
         console.timeEnd(`[Request ${context.awsRequestId}] Sent follow up message`);
       } else {
         console.error(`[Request ${context.awsRequestId}] Error parsing command`);
