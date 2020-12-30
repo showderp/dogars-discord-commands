@@ -37,10 +37,7 @@ export const getSetByIdCommand: Command = ({
 
           if (sets[0]) {
             return {
-              type: DiscordInteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-              data: {
-                embeds: [createSetEmbed(sets[0])],
-              },
+              embeds: [createSetEmbed(sets[0])],
             };
           }
         }
@@ -49,10 +46,7 @@ export const getSetByIdCommand: Command = ({
 
         if (set) {
           return {
-            type: DiscordInteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-              embeds: [createSetEmbed(set)],
-            },
+            embeds: [createSetEmbed(set)],
           };
         }
       }
@@ -71,18 +65,12 @@ export const getRandomSetCommand: Command = ({
 
       if (set) {
         return {
-          type: DiscordInteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            embeds: [createSetEmbed(set)],
-          },
+          embeds: [createSetEmbed(set)],
         };
       }
 
       return {
-        type: DiscordInteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          embeds: [createErrorEmbed('Unable to find a random set')],
-        },
+        embeds: [createErrorEmbed('Unable to find a random set')],
       };
     }
 
@@ -160,10 +148,7 @@ export const advancedSearchSetCommand: Command = ({
 
       if (sets[0]) {
         return {
-          type: DiscordInteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            embeds: [createSetEmbed(sets[0])],
-          },
+          embeds: [createSetEmbed(sets[0])],
         };
       }
     }

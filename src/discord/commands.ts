@@ -1,9 +1,9 @@
+import axios from 'axios';
 import {
   DiscordInteraction,
   DiscordInteractionDataOption,
   DiscordInteractionDataValueType,
-  DiscordInteractionResponse,
-  DiscordInteractionResponseType,
+  DiscordInteractionResponseData,
 } from './types';
 
 const matchesType = (valueConfiguration: ValueConfiguration, value?: any) => {
@@ -43,7 +43,7 @@ export const getValues = <T>(
 export type CommandProcessor = (
   interaction: DiscordInteraction,
   options: DiscordInteractionDataOption[],
-) => Promise<DiscordInteractionResponse>;
+) => Promise<DiscordInteractionResponseData>;
 
 export type Command = { processor: CommandProcessor } | { subCommands: Commands };
 
@@ -55,7 +55,7 @@ const processCommand = async (
   interaction: DiscordInteraction,
   command: Command,
   options?: DiscordInteractionDataOption[],
-): Promise<DiscordInteractionResponse> => {
+): Promise<DiscordInteractionResponseData | undefined> => {
   if ('subCommands' in command) {
     const subCommandOption = options?.find((option) => option.options);
 
@@ -67,9 +67,7 @@ const processCommand = async (
       }
     }
 
-    return {
-      type: DiscordInteractionResponseType.ACKNOWLEDGE,
-    };
+    return undefined;
   }
   return command.processor(interaction, options || []);
 };
@@ -87,4 +85,12 @@ export const createCommandProcessor = (commands: Commands) => (interaction: Disc
   }
 
   throw new Error('No data available on interaction');
+};
+
+export const createFollowUpMessage = async (
+  applicationId: string,
+  token: string,
+  data: DiscordInteractionResponseData,
+) => {
+  await axios.post(`https://discord.com/api/webhooks/${applicationId}/${token}`, data);
 };

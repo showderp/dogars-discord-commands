@@ -1,19 +1,23 @@
-import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
+import { APIGatewayProxyHandlerV2, SQSHandler } from 'aws-lambda';
+import { SQS } from 'aws-sdk';
 import NaCl from 'tweetnacl';
 import {
+  createCommandProcessor,
+  createFollowUpMessage,
   DiscordInteraction,
   DiscordInteractionResponseType,
   DiscordInteractionType,
 } from './discord';
-import { createCommandProcessor } from './discord/commands';
 import { commands } from './discord-commands';
 
+const APPLICATION_ID = process.env.APPLICATION_ID as string;
 const PUBLIC_KEY = process.env.PUBLIC_KEY as string;
+const SQS_QUEUE_URL = process.env.SQS_QUEUE_URL as string;
 
 const processCommand = createCommandProcessor(commands);
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler: APIGatewayProxyHandlerV2 = async (
+export const acknowledgeHandler: APIGatewayProxyHandlerV2 = async (
   apiGatewayEvent,
   context,
 ) => {
@@ -45,14 +49,38 @@ export const handler: APIGatewayProxyHandlerV2 = async (
     };
   }
 
-  console.time(`[Request ${context.awsRequestId}] Command processing time`);
-  const response = await processCommand(interaction);
-  console.timeEnd(`[Request ${context.awsRequestId}] Command processing time`);
-
-  console.log(`[Request ${context.awsRequestId}] Responding with: ${JSON.stringify(response)}`);
+  const sqsClient = new SQS();
+  await sqsClient.sendMessage({
+    QueueUrl: SQS_QUEUE_URL,
+    MessageBody: apiGatewayEvent.body || '{}',
+  }).promise();
 
   return {
     statusCode: 200,
-    body: JSON.stringify(response),
+    body: JSON.stringify({
+      type: DiscordInteractionResponseType.ACKNOWLEDGE_WITH_SOURCE,
+    }),
   };
+};
+
+export const responseHandler: SQSHandler = async (
+  sqsEvent,
+  context,
+) => {
+  await Promise.all(sqsEvent.Records
+    .map((record) => record.body)
+    .map((rawInteraction) => JSON.parse(rawInteraction) as DiscordInteraction)
+    .map(async (interaction) => {
+      console.time(`[Request ${context.awsRequestId}] Command processing time`);
+      const response = await processCommand(interaction);
+      console.timeEnd(`[Request ${context.awsRequestId}] Command processing time`);
+
+      if (response) {
+        console.time(`[Request ${context.awsRequestId}] Sent follow up message`);
+        await createFollowUpMessage(APPLICATION_ID, interaction.token, response);
+        console.timeEnd(`[Request ${context.awsRequestId}] Sent follow up message`);
+      } else {
+        console.error(`[Request ${context.awsRequestId}] Error parsing command`);
+      }
+    }));
 };

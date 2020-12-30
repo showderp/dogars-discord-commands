@@ -2,24 +2,55 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
+  DiscordApplicationId:
+    Type: String
   DiscordApplicationPublicKey:
     Type: String
 
 Resources:
-  HandleDiscordCommandFunction:
+  AcknowledgeDiscordCommandFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: dist/index.handler
+      Handler: dist/index.acknowledgeHandler
       Runtime: nodejs12.x
       Environment:
         Variables:
+          APPLICATION_ID: !Ref DiscordApplicationId
           PUBLIC_KEY: !Ref DiscordApplicationPublicKey
+          SQS_QUEUE_URL: !Ref ResponseQueue
+      Policies:
+        - SQSSendMessagePolicy:
+            QueueName:
+              !GetAtt ResponseQueue.QueueName
       Events:
-        HandleDiscordCommand:
+        AcknowledgeDiscordCommand:
           Type: Api
           Properties:
             Path: /command
             Method: post
+
+  RespondToDiscordCommandFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/index.responseHandler
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          APPLICATION_ID: !Ref DiscordApplicationId
+          PUBLIC_KEY: !Ref DiscordApplicationPublicKey
+          SQS_QUEUE_URL: !Ref ResponseQueue
+      Policies:
+        - SQSPollerPolicy:
+            QueueName:
+              !GetAtt ResponseQueue.QueueName
+      Events:
+        RespondToDiscordCommand:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt ResponseQueue.Arn
+
+  ResponseQueue:
+    Type: AWS::SQS::Queue
 
 Outputs:
   HandleDiscordCommandApi:

@@ -3,6 +3,7 @@ import {
   CommandProcessor,
   Commands,
   createCommandProcessor,
+  createFollowUpMessage,
   getValues,
 } from './commands';
 import {
@@ -33,6 +34,7 @@ export {
   CommandProcessor,
   Commands,
   createCommandProcessor,
+  createFollowUpMessage,
   DiscordAllowedMentionTypes,
   DiscordAllowedMentions,
   DiscordEmbed,
