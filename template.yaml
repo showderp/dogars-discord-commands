@@ -28,6 +28,11 @@ Resources:
           Properties:
             Path: /command
             Method: post
+        WarmLambda:
+          Type: Schedule
+          Properties:
+            Schedule: rate(8 minutes)
+            Input: '{ "body": "warm" }'
 
   RespondToDiscordCommandFunction:
     Type: AWS::Serverless::Function
@@ -48,6 +53,11 @@ Resources:
           Type: SQS
           Properties:
             Queue: !GetAtt ResponseQueue.Arn
+        WarmLambda:
+          Type: Schedule
+          Properties:
+            Schedule: rate(8 minutes)
+            Input: '{ "Records": [] }'
 
   ResponseQueue:
     Type: AWS::SQS::Queue

@@ -22,6 +22,12 @@ export const acknowledgeHandler: APIGatewayProxyHandlerV2 = async (
   apiGatewayEvent,
   context,
 ) => {
+  if (apiGatewayEvent.body === 'warm') {
+    return {
+      statusCode: 204,
+    };
+  }
+
   const signature = apiGatewayEvent.headers['x-signature-ed25519'] || '';
   const timestamp = apiGatewayEvent.headers['x-signature-timestamp'] || '';
 
