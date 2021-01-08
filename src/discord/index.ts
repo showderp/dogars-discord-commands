@@ -3,7 +3,7 @@ import {
   CommandProcessor,
   Commands,
   createCommandProcessor,
-  editOriginalMessage,
+  createFollowupMessage,
   getValues,
 } from './commands';
 import {
@@ -34,6 +34,7 @@ export {
   CommandProcessor,
   Commands,
   createCommandProcessor,
+  createFollowupMessage,
   DiscordAllowedMentionTypes,
   DiscordAllowedMentions,
   DiscordEmbed,
@@ -54,6 +55,5 @@ export {
   DiscordInteractionType,
   DiscordPremiumType,
   DiscordUser,
-  editOriginalMessage,
   getValues,
 };
