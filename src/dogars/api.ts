@@ -3,7 +3,7 @@ import { DogarsPage, DogarsQuery, DogarsSet } from './types';
 
 export const getSet = async (id: number): Promise<DogarsSet | undefined> => {
   try {
-    return (await axios.get<DogarsSet>(`https://dogars.ga/api/sets/${id}`)).data;
+    return (await axios.get<DogarsSet>(`https://dogars.org/api/sets/${id}`)).data;
   } catch (error) {
     console.error(error);
 
@@ -13,7 +13,7 @@ export const getSet = async (id: number): Promise<DogarsSet | undefined> => {
 
 export const getRandomSetId = async () => {
   try {
-    return (await axios.get<number>('https://dogars.ga/api/random')).data;
+    return (await axios.get<number>('https://dogars.org/api/random')).data;
   } catch (error) {
     console.error(error);
 
@@ -33,7 +33,7 @@ export const searchSets = async (
     }
 
     return (await axios.get<DogarsPage>(
-      'https://dogars.ga/api/search',
+      'https://dogars.org/api/search',
       { params },
     )).data;
   } catch (error) {
@@ -54,7 +54,7 @@ export const advancedSearchSets = async (
       params.random = 'true';
     }
 
-    return (await axios.get<DogarsPage>('https://dogars.ga/api/search', { params })).data;
+    return (await axios.get<DogarsPage>('https://dogars.org/api/search', { params })).data;
   } catch (error) {
     console.error(error);
 

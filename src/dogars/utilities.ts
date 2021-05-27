@@ -106,7 +106,7 @@ export const createSetEmbed = (set: DogarsSet): DiscordEmbed => {
     params.set('hash', set.hash);
   }
 
-  const authorLink = `https://dogars.ga/results?${params.toString()}`;
+  const authorLink = `https://dogars.org/results?${params.toString()}`;
 
   const timestamp = typeof set.date_added === 'string'
     ? parseInt(set.date_added, 10)
@@ -117,15 +117,15 @@ export const createSetEmbed = (set: DogarsSet): DiscordEmbed => {
     title: set.name || set.species,
     author: {
       name: author,
-      icon_url: 'https://dogars.ga/img/icons/favicon-32x32.png',
+      icon_url: 'https://dogars.org/img/icons/favicon-32x32.png',
       url: (set.creator || set.hash) ? authorLink : undefined,
     },
-    url: `https://dogars.ga/set/${set.id}`,
+    url: `https://dogars.org/set/${set.id}`,
     thumbnail: {
       url: getPokemonImage(set),
     },
     image: {
-      url: `https://dogars.ga/api/custom/${set.id}`,
+      url: `https://dogars.org/api/custom/${set.id}`,
     },
     timestamp: new Date(timestamp).toISOString(),
     footer: {
